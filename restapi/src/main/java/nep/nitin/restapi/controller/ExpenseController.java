@@ -9,6 +9,7 @@ import nep.nitin.restapi.service.ExpenseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -39,6 +40,18 @@ public class ExpenseController {
         log.info("printing the data from the service{}", list);
         List<ExpenseResponse> response = list.stream().map(expenseDTO-> mapToExpenseResponse(expenseDTO)).collect(Collectors.toList());
         return response;
+        }
+    /**
+     *It will fetch a single expenses from the databases
+     * @param expenseId
+     * @return ExpenseResponse
+     */
+        @GetMapping("/expenses/{expenseId}")
+        public ExpenseResponse getExpenseById(@PathVariable String expenseId){
+            log.info("API GET /expenses/{} called", expenseId);
+            ExpenseDTO expenseDTO = expenseService.getExpenseByExpenseId(expenseId);
+            log.info("Printing the expense details{}", expenseDTO);
+            return mapToExpenseResponse(expenseDTO);
         }
     /**
      * Mapper method for converting expense dto object to expense response

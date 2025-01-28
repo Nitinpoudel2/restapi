@@ -10,9 +10,16 @@ import java.util.List;
  */
 public interface ExpenseService {
     /**
-     * It will fetch the expenses from the databases
-     * @return the list
+     * It will fetch the single expenses details from the database
+     * @return list
+     *
      */
     List<ExpenseDTO> getAllExpenses();
+    /**
+     *It will fetch the single expenses details from the databases
+     * @param expenseId
+     * @return ExpenseDTO
+     */
 
+    ExpenseDTO getExpenseByExpenseId(String ExpenseId);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nep.nitin.restapi.dto.ExpenseDTO;
 import nep.nitin.restapi.entity.ExpenseEntity;
+import nep.nitin.restapi.exceptions.ResourceNotFoundException;
 import nep.nitin.restapi.repository.ExpenseRepository;
 import nep.nitin.restapi.service.ExpenseService;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,18 @@ public class ExpenseServiceImpl implements ExpenseService {
         List<ExpenseDTO> listOfExpenses = list.stream().map(expenseEntity -> mapToExpenseDTO(expenseEntity)).collect(Collectors.toList());
         //Return the list
         return listOfExpenses;
+    }
+    /**
+     *It will fetch the single expense details from the databases
+     * @param expenseId
+     * @return ExpenseDTO
+     */
+    @Override
+    public ExpenseDTO getExpenseByExpenseId(String expenseId) {
+        ExpenseEntity expenseEntity = expenseRepository.findByExpenseId(expenseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found for the expense id" + expenseId));
+        log.info("Printing the expense entity details {}",expenseEntity);
+        return mapToExpenseDTO(expenseEntity);
     }
 
     /**

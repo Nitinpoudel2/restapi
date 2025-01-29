@@ -7,10 +7,8 @@ import nep.nitin.restapi.dto.ExpenseDTO;
 import nep.nitin.restapi.io.ExpenseResponse;
 import nep.nitin.restapi.service.ExpenseService;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +50,17 @@ public class ExpenseController {
             ExpenseDTO expenseDTO = expenseService.getExpenseByExpenseId(expenseId);
             log.info("Printing the expense details{}", expenseDTO);
             return mapToExpenseResponse(expenseDTO);
+        }
+    /**
+     *It will delete a single expenses from the databases
+     * @param expenseId
+     * @return void
+     */
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        @DeleteMapping("/expenses/{expenseId}")
+        public void deleteExpenseByExpenseId(@PathVariable String expenseId){
+            log.info("API DELETE /expenses/{} called", expenseId);
+            expenseService.deleteExpenseByExpenseId(expenseId);
         }
     /**
      * Mapper method for converting expense dto object to expense response

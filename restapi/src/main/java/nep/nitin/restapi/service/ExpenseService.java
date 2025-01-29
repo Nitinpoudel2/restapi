@@ -11,15 +11,25 @@ import java.util.List;
 public interface ExpenseService {
     /**
      * It will fetch the single expenses details from the database
-     * @return list
      *
+     * @return list
      */
     List<ExpenseDTO> getAllExpenses();
+
     /**
-     *It will fetch the single expenses details from the databases
+     * It will fetch the single expenses details from the databases
+     *
      * @param expenseId
      * @return ExpenseDTO
      */
 
     ExpenseDTO getExpenseByExpenseId(String ExpenseId);
+    /**
+     *It will delete the expense from the database
+     * @param expenseId
+     * @return void
+     **/
+    // declaring a method which is deleting id by expenseId, which is a parameter
+    void deleteExpenseByExpenseId(String expenseId);
+
 }

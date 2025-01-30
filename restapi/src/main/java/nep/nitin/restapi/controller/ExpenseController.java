@@ -1,9 +1,11 @@
 package nep.nitin.restapi.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nep.nitin.restapi.dto.ExpenseDTO;
+import nep.nitin.restapi.io.ExpenseRequest;
 import nep.nitin.restapi.io.ExpenseResponse;
 import nep.nitin.restapi.service.ExpenseService;
 import org.modelmapper.ModelMapper;
@@ -62,6 +64,30 @@ public class ExpenseController {
             log.info("API DELETE /expenses/{} called", expenseId);
             expenseService.deleteExpenseByExpenseId(expenseId);
         }
+    /**
+     *It will save the expense details to the database
+     * @param expenseRequest
+     * @return expenseResponse
+     */
+        @ResponseStatus(HttpStatus.CREATED)
+        @PostMapping("/expenses")
+        public ExpenseResponse saveExpenseDetails(@Valid @RequestBody ExpenseRequest expenseRequest) {
+            log.info("API POST /expenses called {}", expenseRequest);
+            ExpenseDTO expenseDTO =mapToExpenseDTO(expenseRequest);
+            expenseDTO = expenseService.saveExpenseDetails(expenseDTO);
+            log.info("Printing the expenseDTO {}", expenseDTO);
+            return mapToExpenseResponse(expenseDTO);
+        }
+    /**
+     *Mapper method to map values from the ExpenseRequest to ExpenseDTO
+     * @param expenseRequest
+     * @return ExpenseDTO
+     */
+    private ExpenseDTO mapToExpenseDTO(ExpenseRequest expenseRequest) {
+            return modelMapper.map(expenseRequest, ExpenseDTO.class);
+
+    }
+
     /**
      * Mapper method for converting expense dto object to expense response
      * @param

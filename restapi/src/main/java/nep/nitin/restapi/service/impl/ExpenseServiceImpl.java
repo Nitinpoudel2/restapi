@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
@@ -63,6 +64,27 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void deleteExpenseByExpenseId(String expenseId) {
         ExpenseEntity expenseEntity = getExpenseEntity(expenseId);
         expenseRepository.delete(expenseEntity);
+    }
+    /**
+     *It will save the expense details to the database
+     * @param expenseDTO
+     * @return ExpenseDTO
+     */
+    @Override
+    public ExpenseDTO saveExpenseDetails(ExpenseDTO expenseDTO) {
+        ExpenseEntity newExpenseEntity = mapToExpenseEntity(expenseDTO);
+        newExpenseEntity.setExpenseId(UUID.randomUUID().toString());
+        newExpenseEntity = expenseRepository.save(newExpenseEntity);
+        log.info("Printing the expense entity details {} ", newExpenseEntity);
+        return mapToExpenseDTO(newExpenseEntity);
+    }
+    /**
+     *Mapper method to map values from Expense dto to Expense entity
+     * @param expenseDTO
+     * @return ExpenseEntity
+     */
+    private ExpenseEntity mapToExpenseEntity(ExpenseDTO expenseDTO) {
+        return modelMapper.map(expenseDTO, ExpenseEntity.class);
     }
 
     /**

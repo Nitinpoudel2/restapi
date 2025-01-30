@@ -78,6 +78,15 @@ public class ExpenseController {
             log.info("Printing the expenseDTO {}", expenseDTO);
             return mapToExpenseResponse(expenseDTO);
         }
+        @PutMapping("/expenses/{expenseId}")
+        public ExpenseResponse updateExpenseDetails(@RequestBody ExpenseRequest updateRequest, @PathVariable String expenseId) {
+            log.info("API PUT/ expenses/{} request body {}", expenseId, updateRequest);
+            ExpenseDTO updatedExpenseDTO = mapToExpenseDTO(updateRequest);
+            updatedExpenseDTO = expenseService.updateExpenseDetails(updatedExpenseDTO, expenseId);
+            log.info("Printing the updated expense dto details {}", updatedExpenseDTO);
+             return mapToExpenseResponse(updatedExpenseDTO);
+
+        }
     /**
      *Mapper method to map values from the ExpenseRequest to ExpenseDTO
      * @param expenseRequest

@@ -38,6 +38,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(new Date())
                 .build();
     }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ErrorObject handleGeneralException(Exception ex, WebRequest request) {
+        log.error("Throwing the Exception from the GlobalExceptionHandler", ex.getMessage());
+        return ErrorObject.builder()
+                .errorCode("Unexpected Error")
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message(ex.getMessage())
+                .timestamp(new Date())
+                .build();
+    }
+
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatusCode status,
@@ -52,5 +64,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         errorResponse.put("errorCode", "Validation Failed");
         return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
 }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @Slf4j // for accessing logs in the controller
-@CrossOrigin("*")
+
 
 
 public class ExpenseController {

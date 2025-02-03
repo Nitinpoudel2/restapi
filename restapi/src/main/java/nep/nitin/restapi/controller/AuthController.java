@@ -6,15 +6,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import nep.nitin.restapi.dto.ProfileDTO;
+import nep.nitin.restapi.io.AuthRequest;
+import nep.nitin.restapi.io.AuthResponse;
 import nep.nitin.restapi.io.ProfileRequest;
 import nep.nitin.restapi.io.ProfileResponse;
+import nep.nitin.restapi.service.CustomUserDetailService;
 import nep.nitin.restapi.service.ProfileService;
+import nep.nitin.restapi.util.JwtTokenUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -24,6 +30,9 @@ public class AuthController {
 
     private final ModelMapper modelMapper ;
     private final ProfileService profileService ;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final CustomUserDetailService userDetailService;
 
     /**
      * API endpoint to register a new user
@@ -41,6 +50,14 @@ public class AuthController {
         return mapToProfileResponse(profileDTO);
 
         }
+    @PostMapping("/login")
+    public AuthResponse authenticate(@RequestBody AuthRequest authRequest){
+        log.info("API/login is called{}", authRequest);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+        final UserDetails userDetails = userDetailService.loadUserByUsername(authRequest.getEmail());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return new AuthResponse(token, authRequest.getEmail());
+    }
     /**
      * Mapper method to map values from profile request to profile DTO
      * @param profileRequest

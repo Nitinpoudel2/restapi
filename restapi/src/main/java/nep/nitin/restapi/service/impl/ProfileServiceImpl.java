@@ -26,10 +26,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 public class ProfileServiceImpl implements ProfileService {
-        private final ProfileRepository profileRepository;
-        private final ModelMapper modelMapper;
 
-        private final PasswordEncoder encoder;
+    private final ProfileRepository profileRepository;
+    private final ModelMapper modelMapper;
+
+    private final PasswordEncoder encoder;
     /**
      * It will save the user details to database
      * @param profileDTO

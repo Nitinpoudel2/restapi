@@ -21,9 +21,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @Slf4j // for accessing logs in the controller
-
-
-
 public class ExpenseController {
     private final ExpenseService expenseService;
     private final ModelMapper modelMapper;

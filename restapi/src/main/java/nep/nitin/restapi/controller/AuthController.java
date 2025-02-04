@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-
 public class AuthController {
 
     private final ModelMapper modelMapper ;
@@ -50,6 +49,7 @@ public class AuthController {
         return mapToProfileResponse(profileDTO);
 
         }
+        //mistakes in this one check it
     @PostMapping("/login")
     public AuthResponse authenticateProfile(@RequestBody AuthRequest authRequest) throws Exception {
         log.info("API/login is called{}", authRequest);

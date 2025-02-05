@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nep.nitin.restapi.service.CustomUserDetailService;
+import nep.nitin.restapi.service.TokenBlacklistService;
 import nep.nitin.restapi.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +25,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private CustomUserDetailService userDetailsService;
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,6 +37,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
+            if(jwtToken != null && tokenBlacklistService.isTokenBlacklisted(jwtToken)){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return ;
+            }
+
             try {
                 email = jwtTokenUtil.getUsernameFromToken(jwtToken);
             }catch (IllegalArgumentException ex) {
